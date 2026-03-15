@@ -1,0 +1,14 @@
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+jobs.db
+job_tracker.xlsx
+.fetch_cache.json
+.env
+*.egg-info/
+dist/
+build/
+.DS_Store
+Thumbs.db
