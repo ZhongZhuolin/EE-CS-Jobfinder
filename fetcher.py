@@ -76,14 +76,59 @@ def fetch_all_sources():
 
     # Existing source: Indeed RSS
     indeed_queries = [
-        "software engineering internship",
+        # CS / Software
+        "software engineer internship",
+        "backend engineer internship",
+        "computer science internship",
+        "systems software internship",
+        "devops engineer internship",
+        "cloud engineer internship",
+        "cybersecurity internship",
+        # AI / ML / Data
+        "machine learning internship",
+        "data science internship",
+        "data engineering internship",
+        "ai engineer internship",
+        "mlops internship",
+        "nlp engineer internship",
+        # Banking / FinTech
+        "fintech software internship",
+        "banking technology internship",
+        "financial software engineer internship",
+        "payments engineering internship",
+        "capital one software internship",
+        "fraud detection engineer internship",
+        # MedTech
+        "medical device software internship",
         "medical software internship",
+        "healthtech software internship",
+        "biomedical software internship",
+        "digital health engineering internship",
+        # Embedded / EE / Defense
         "embedded systems internship",
         "firmware internship",
-        "defense software internship",
         "electrical engineering internship",
-        "biomedical software internship",
+        "defense software internship",
         "avionics internship",
+        "fpga internship",
+        # Government / Defense contractors
+        "government software internship",
+        "dod software internship",
+        "cleared software engineer internship",
+        "defense contractor internship",
+        "signals intelligence internship",
+        "systems engineer defense internship",
+        "radar software internship",
+        "national security software internship",
+        "booz allen internship",
+        "leidos internship",
+        "saic internship",
+        # Non-tech companies
+        "software engineer internship insurance",
+        "software engineer internship automotive",
+        "software developer internship retail",
+        "data engineer internship energy",
+        "software engineer internship telecom",
     ]
 
     for query in indeed_queries:

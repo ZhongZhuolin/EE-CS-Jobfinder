@@ -25,10 +25,11 @@ def main():
     print(f"After dedupe: {len(jobs)}")
     
     jobs = filter_jobs(
-    jobs,
-    internships_only=True,
-    active_only=True,
-    min_score=4
+        jobs,
+        internships_only=True,
+        active_only=True,
+        min_score=4,
+        us_only=True,
     )
 
     jobs = add_date_timestamps(jobs)
