@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Job Tracker Dashboard</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #0f1117;
+    --card:      #1a1d27;
+    --row-even:  #1e2130;
+    --row-odd:   #252840;
+    --header:    #13151f;
+    --border:    #2e3250;
+    --text:      #d0d4e8;
+    --muted:     #6b7098;
+    --accent:    #5b6ef5;
+    --green:     #3ddc84;
+    --orange:    #f5a623;
+    --red:       #e05252;
+    --purple:    #a78bfa;
+    --input-bg:  #252840;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  /* ---------- Top bar ---------- */
+  .topbar {
+    background: var(--header);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .topbar h1 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.02em;
+  }
+  .topbar .subtitle {
+    color: var(--muted);
+    font-size: 13px;
+    margin-left: auto;
+  }
+
+  /* ---------- Stats bar ---------- */
+  .stats-bar {
+    display: flex;
+    gap: 16px;
+    padding: 20px 24px 0;
+    flex-wrap: wrap;
+  }
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 22px;
+    min-width: 140px;
+    flex: 1;
+  }
+  .stat-card .label {
+    color: var(--muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+  }
+  .stat-card .value {
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+  }
+  .stat-card .value.green { color: var(--green); }
+  .stat-card .value.orange { color: var(--orange); }
+  .stat-card .value.accent { color: var(--accent); }
+
+  /* ---------- Filter bar ---------- */
+  .filter-bar {
+    display: flex;
+    gap: 10px;
+    padding: 16px 24px;
+    flex-wrap: wrap;
+    align-items: center;
+    background: var(--header);
+    border-bottom: 1px solid var(--border);
+    margin-top: 20px;
+  }
+  .filter-bar label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .filter-bar input,
+  .filter-bar select {
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .filter-bar input:focus,
+  .filter-bar select:focus {
+    border-color: var(--accent);
+  }
+  #search-input { width: 200px; }
+  #score-input  { width: 70px; }
+  .filter-bar .reset-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    border-radius: 6px;
+    padding: 6px 14px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-top: 14px;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .filter-bar .reset-btn:hover { border-color: var(--accent); color: var(--text); }
+
+  /* ---------- Count badge ---------- */
+  .count-row {
+    padding: 10px 24px 4px;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  /* ---------- Table ---------- */
+  .table-wrap {
+    padding: 0 24px 40px;
+    overflow-x: auto;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1100px;
+  }
+  thead th {
+    background: var(--header);
+    color: var(--muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    padding: 10px 10px;
+    text-align: left;
+    border-bottom: 2px solid var(--border);
+    position: sticky;
+    top: 52px;
+    z-index: 50;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+  }
+  thead th:hover { color: var(--text); }
+  thead th.sorted-asc::after  { content: " ↑"; color: var(--accent); }
+  thead th.sorted-desc::after { content: " ↓"; color: var(--accent); }
+
+  tbody tr { transition: background 0.1s; }
+  tbody tr:nth-child(even) { background: var(--row-even); }
+  tbody tr:nth-child(odd)  { background: var(--row-odd);  }
+  tbody tr:hover { filter: brightness(1.12); }
+
+  /* Row state tints */
+  tbody tr.state-nj { background: #1a2a1e !important; }
+  tbody tr.state-pa { background: #1a2230 !important; }
+  tbody tr.state-ny { background: #252218 !important; }
+  tbody tr.state-remote { background: #21182e !important; }
+  tbody tr.applied-row { opacity: 0.6; }
+
+  td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+
+  /* Score colors */
+  .score-high   { color: var(--green);  font-weight: 700; }
+  .score-medium { color: var(--orange); font-weight: 700; }
+  .score-low    { color: var(--muted);  }
+
+  /* Title cell */
+  .title-cell {
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 500;
+  }
+  .applied-row .title-cell {
+    text-decoration: line-through;
+    opacity: 0.7;
+  }
+  .company-cell {
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--muted);
+  }
+
+  /* Source badge */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+  }
+  .badge-greenhouse { background: #1e3a2a; color: #4ade80; }
+  .badge-workday    { background: #1a2d4a; color: #60a5fa; }
+  .badge-lever      { background: #2a1e3a; color: #c084fc; }
+  .badge-ashby      { background: #2a2a1e; color: #fbbf24; }
+  .badge-simplify   { background: #1e2a3a; color: #38bdf8; }
+  .badge-indeed     { background: #3a1e1e; color: #f87171; }
+  .badge-remoteok   { background: #1e3a38; color: #2dd4bf; }
+  .badge-other      { background: #252840; color: var(--muted); }
+
+  /* Location cell */
+  .loc-cell {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--muted);
+    font-size: 12px;
+  }
+
+  /* Days ago */
+  .days-cell {
+    white-space: nowrap;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .days-fresh { color: var(--green); font-weight: 600; }
+  .days-week  { color: var(--text);  }
+
+  /* Link */
+  .link-btn {
+    display: inline-block;
+    padding: 3px 10px;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: border-color 0.15s;
+  }
+  .link-btn:hover { border-color: var(--accent); }
+
+  /* Toggle applied button */
+  .toggle-btn {
+    padding: 3px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: background 0.15s, opacity 0.15s;
+    white-space: nowrap;
+  }
+  .toggle-btn.applied    { background: #1e3a2a; color: var(--green); }
+  .toggle-btn.not-applied { background: var(--input-bg); color: var(--muted); border: 1px solid var(--border); }
+  .toggle-btn:disabled { opacity: 0.5; cursor: default; }
+
+  /* Priority / Status dropdowns */
+  .inline-select {
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 6px;
+    padding: 3px 6px;
+    font-size: 12px;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .inline-select:focus { border-color: var(--accent); }
+
+  /* Notes inline edit */
+  .notes-cell {
+    min-width: 140px;
+  }
+  .notes-text {
+    display: inline-block;
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 12px;
+    padding: 2px 4px;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .notes-text:hover { border-color: var(--border); color: var(--text); }
+  .notes-input {
+    background: var(--input-bg);
+    border: 1px solid var(--accent);
+    color: var(--text);
+    border-radius: 4px;
+    padding: 3px 6px;
+    font-size: 12px;
+    width: 160px;
+    outline: none;
+  }
+  .notes-placeholder { color: var(--border); font-style: italic; }
+
+  /* State pill */
+  .state-pill {
+    display: inline-block;
+    padding: 1px 7px;
+    border-radius: 8px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .state-nj     { background: #1a2a1e; color: #4ade80; }
+  .state-pa     { background: #1a2230; color: #60a5fa; }
+  .state-ny     { background: #2a2a18; color: #fbbf24; }
+  .state-remote { background: #21182e; color: var(--purple); }
+  .state-other  { background: #252840; color: var(--muted); }
+
+  /* Hidden row */
+  .hidden-row { display: none !important; }
+
+  /* Toast */
+  #toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #1e3a2a;
+    color: var(--green);
+    border: 1px solid #2d5a3d;
+    border-radius: 8px;
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.2s, transform 0.2s;
+    pointer-events: none;
+    z-index: 999;
+  }
+  #toast.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  #toast.error {
+    background: #3a1e1e;
+    color: var(--red);
+    border-color: #5a2d2d;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>Job Tracker</h1>
+  <span class="subtitle">Live view &bull; {{ jobs|length }} jobs shown</span>
+</div>
+
+<!-- Stats bar (always over all jobs) -->
+<div class="stats-bar">
+  <div class="stat-card">
+    <div class="label">Total Jobs</div>
+    <div class="value accent">{{ stats.total }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="label">Applied</div>
+    <div class="value green">{{ stats.applied }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="label">New This Week</div>
+    <div class="value orange">{{ stats.new_this_week }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="label">Avg Score</div>
+    <div class="value">{{ stats.avg_score }}</div>
+  </div>
+</div>
+
+<!-- Filter bar (all client-side) -->
+<div class="filter-bar">
+  <label>
+    Search
+    <input id="search-input" type="text" placeholder="Title or company…"
+           value="{{ filters.q }}">
+  </label>
+  <label>
+    Source
+    <select id="source-filter">
+      <option value="all" {% if filters.source == 'all' %}selected{% endif %}>All Sources</option>
+      <option value="Simplify"   {% if filters.source == 'Simplify' %}selected{% endif %}>Simplify</option>
+      <option value="Greenhouse" {% if filters.source == 'Greenhouse' %}selected{% endif %}>Greenhouse</option>
+      <option value="Workday"    {% if filters.source == 'Workday' %}selected{% endif %}>Workday</option>
+      <option value="Lever"      {% if filters.source == 'Lever' %}selected{% endif %}>Lever</option>
+      <option value="Ashby"      {% if filters.source == 'Ashby' %}selected{% endif %}>Ashby</option>
+      <option value="Indeed"     {% if filters.source == 'Indeed' %}selected{% endif %}>Indeed</option>
+      <option value="RemoteOK"   {% if filters.source == 'RemoteOK' %}selected{% endif %}>RemoteOK</option>
+    </select>
+  </label>
+  <label>
+    State
+    <select id="state-filter">
+      <option value="all"    {% if filters.state == 'all' %}selected{% endif %}>All States</option>
+      <option value="nj"     {% if filters.state == 'nj' %}selected{% endif %}>NJ</option>
+      <option value="pa"     {% if filters.state == 'pa' %}selected{% endif %}>PA</option>
+      <option value="ny"     {% if filters.state == 'ny' %}selected{% endif %}>NY</option>
+      <option value="remote" {% if filters.state == 'remote' %}selected{% endif %}>Remote</option>
+      <option value="other"  {% if filters.state == 'other' %}selected{% endif %}>Other</option>
+    </select>
+  </label>
+  <label>
+    Applied
+    <select id="applied-filter">
+      <option value="all" {% if filters.applied == 'all' %}selected{% endif %}>All</option>
+      <option value="no"  {% if filters.applied == 'no' %}selected{% endif %}>Not Applied</option>
+      <option value="yes" {% if filters.applied == 'yes' %}selected{% endif %}>Applied</option>
+    </select>
+  </label>
+  <label>
+    Min Score
+    <input id="score-input" type="number" min="0" max="20"
+           placeholder="0" value="{{ filters.min_score }}">
+  </label>
+  <button class="reset-btn" onclick="resetFilters()">Reset</button>
+</div>
+
+<div class="count-row">
+  Showing <span id="visible-count">{{ jobs|length }}</span> jobs
+</div>
+
+<div class="table-wrap">
+<table id="jobs-table">
+  <thead>
+    <tr>
+      <th data-col="title">Title</th>
+      <th data-col="company">Company</th>
+      <th data-col="days">Days Ago</th>
+      <th data-col="state">State</th>
+      <th data-col="score">Score</th>
+      <th data-col="source">Source</th>
+      <th data-col="location">Location</th>
+      <th data-col="applied">Applied</th>
+      <th data-col="priority">Priority</th>
+      <th data-col="status">Status</th>
+      <th data-col="notes">Notes</th>
+      <th data-col="link">Link</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for job in jobs %}
+  {% set loc = job.locations if job.locations is string else (job.locations|join(', ') if job.locations else '') %}
+  {% set loc_lower = loc|lower %}
+  {% if 'remote' in loc_lower %}
+    {% set state_key = 'remote' %}
+  {% elif ', nj' in loc_lower or loc_lower.startswith('nj') or ' nj' in loc_lower or 'new jersey' in loc_lower %}
+    {% set state_key = 'nj' %}
+  {% elif ', pa' in loc_lower or loc_lower.startswith('pa') or ' pa' in loc_lower or 'pennsylvania' in loc_lower %}
+    {% set state_key = 'pa' %}
+  {% elif ', ny' in loc_lower or loc_lower.startswith('ny') or ' ny' in loc_lower or 'new york' in loc_lower %}
+    {% set state_key = 'ny' %}
+  {% else %}
+    {% set state_key = 'other' %}
+  {% endif %}
+  <tr class="job-row state-{{ state_key }}{% if job.applied %} applied-row{% endif %}"
+      data-title="{{ job.title|lower }}"
+      data-company="{{ job.company_name|lower }}"
+      data-source="{{ job.source|lower }}"
+      data-state="{{ state_key }}"
+      data-applied="{{ 'yes' if job.applied else 'no' }}"
+      data-score="{{ job.match_score or 0 }}"
+      data-url="{{ job.url }}">
+
+    <!-- Title -->
+    <td class="title-cell" title="{{ job.title }}">{{ job.title }}</td>
+
+    <!-- Company -->
+    <td class="company-cell" title="{{ job.company_name }}">{{ job.company_name }}</td>
+
+    <!-- Days ago -->
+    <td class="days-cell{% if job.days_ago is not none and job.days_ago <= 2 %} days-fresh{% elif job.days_ago is not none and job.days_ago <= 7 %} days-week{% endif %}">
+      {% if job.days_ago is not none %}
+        {% if job.days_ago == 0 %}Today
+        {% elif job.days_ago == 1 %}1d ago
+        {% else %}{{ job.days_ago }}d ago
+        {% endif %}
+      {% else %}—{% endif %}
+    </td>
+
+    <!-- State pill -->
+    <td>
+      <span class="state-pill state-{{ state_key }}">
+        {% if state_key == 'remote' %}Remote
+        {% elif state_key == 'nj' %}NJ
+        {% elif state_key == 'pa' %}PA
+        {% elif state_key == 'ny' %}NY
+        {% else %}Other{% endif %}
+      </span>
+    </td>
+
+    <!-- Score -->
+    <td>
+      <span class="{% if (job.match_score or 0) >= 10 %}score-high{% elif (job.match_score or 0) >= 7 %}score-medium{% else %}score-low{% endif %}">
+        {{ job.match_score or 0 }}
+      </span>
+    </td>
+
+    <!-- Source badge -->
+    <td>
+      {% set src = (job.source or '')|lower %}
+      <span class="badge badge-{% if src == 'greenhouse' %}greenhouse{% elif src == 'workday' %}workday{% elif src == 'lever' %}lever{% elif src == 'ashby' %}ashby{% elif src == 'simplify' %}simplify{% elif src == 'indeed' %}indeed{% elif src == 'remoteok' %}remoteok{% else %}other{% endif %}">
+        {{ job.source or '—' }}
+      </span>
+    </td>
+
+    <!-- Location -->
+    <td class="loc-cell" title="{{ loc }}">{{ loc or '—' }}</td>
+
+    <!-- Applied toggle -->
+    <td>
+      <button class="toggle-btn {% if job.applied %}applied{% else %}not-applied{% endif %}"
+              onclick="toggleApplied(this, '{{ job.url }}')">
+        {{ 'Yes' if job.applied else 'No' }}
+      </button>
+    </td>
+
+    <!-- Priority -->
+    <td>
+      <select class="inline-select" onchange="postUpdate('{{ job.url }}', 'priority', this.value)">
+        <option value="0" {% if job.priority == 0 %}selected{% endif %}>—</option>
+        <option value="1" {% if job.priority == 1 %}selected{% endif %}>1 Low</option>
+        <option value="2" {% if job.priority == 2 %}selected{% endif %}>2</option>
+        <option value="3" {% if job.priority == 3 %}selected{% endif %}>3 Mid</option>
+        <option value="4" {% if job.priority == 4 %}selected{% endif %}>4</option>
+        <option value="5" {% if job.priority == 5 %}selected{% endif %}>5 High</option>
+      </select>
+    </td>
+
+    <!-- Status -->
+    <td>
+      <select class="inline-select" onchange="postUpdate('{{ job.url }}', 'status', this.value)">
+        <option value=""            {% if job.status == '' %}selected{% endif %}>—</option>
+        <option value="Applied"     {% if job.status == 'Applied' %}selected{% endif %}>Applied</option>
+        <option value="Interviewing"{% if job.status == 'Interviewing' %}selected{% endif %}>Interviewing</option>
+        <option value="Offer"       {% if job.status == 'Offer' %}selected{% endif %}>Offer</option>
+        <option value="Rejected"    {% if job.status == 'Rejected' %}selected{% endif %}>Rejected</option>
+        <option value="Too Lazy"    {% if job.status == 'Too Lazy' %}selected{% endif %}>Too Lazy</option>
+      </select>
+    </td>
+
+    <!-- Notes inline edit -->
+    <td class="notes-cell">
+      <span class="notes-text {% if not job.notes %}notes-placeholder{% endif %}"
+            onclick="startEditNote(this, '{{ job.url }}')">
+        {{ job.notes if job.notes else 'Add note…' }}
+      </span>
+    </td>
+
+    <!-- Link -->
+    <td>
+      <a class="link-btn" href="{{ job.url }}" target="_blank" rel="noopener">Open</a>
+    </td>
+  </tr>
+  {% else %}
+  <tr>
+    <td colspan="12" style="text-align:center; padding: 40px; color: var(--muted);">
+      No jobs found.
+    </td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// -----------------------------------------------------------------------
+// Toast
+// -----------------------------------------------------------------------
+let toastTimer = null;
+function showToast(msg, isError) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'show' + (isError ? ' error' : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.className = ''; }, 2000);
+}
+
+// -----------------------------------------------------------------------
+// POST helper
+// -----------------------------------------------------------------------
+async function postUpdate(url, field, value) {
+  try {
+    const resp = await fetch('/update', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ url, field, value })
+    });
+    const data = await resp.json();
+    if (data.ok) {
+      showToast('Saved');
+    } else {
+      showToast('Error: ' + (data.error || 'unknown'), true);
+    }
+    return data.ok;
+  } catch (e) {
+    showToast('Network error', true);
+    return false;
+  }
+}
+
+// -----------------------------------------------------------------------
+// Toggle applied
+// -----------------------------------------------------------------------
+async function toggleApplied(btn, url) {
+  btn.disabled = true;
+  const isApplied = btn.classList.contains('applied');
+  const newVal = isApplied ? 0 : 1;
+  const ok = await postUpdate(url, 'applied', newVal);
+  if (ok) {
+    if (newVal) {
+      btn.classList.replace('not-applied', 'applied');
+      btn.textContent = 'Yes';
+      btn.closest('tr').dataset.applied = 'yes';
+      btn.closest('tr').classList.add('applied-row');
+    } else {
+      btn.classList.replace('applied', 'not-applied');
+      btn.textContent = 'No';
+      btn.closest('tr').dataset.applied = 'no';
+      btn.closest('tr').classList.remove('applied-row');
+    }
+    applyFilters(); // re-apply filter in case applied filter is active
+  }
+  btn.disabled = false;
+}
+
+// -----------------------------------------------------------------------
+// Inline notes edit
+// -----------------------------------------------------------------------
+function startEditNote(span, url) {
+  const currentVal = span.dataset.realval !== undefined
+    ? span.dataset.realval
+    : (span.classList.contains('notes-placeholder') ? '' : span.textContent.trim());
+
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'notes-input';
+  input.value = currentVal;
+  span.replaceWith(input);
+  input.focus();
+  input.select();
+
+  async function commit() {
+    const newVal = input.value.trim();
+    const ok = await postUpdate(url, 'notes', newVal);
+    const newSpan = document.createElement('span');
+    newSpan.className = 'notes-text' + (newVal ? '' : ' notes-placeholder');
+    newSpan.textContent = newVal || 'Add note…';
+    newSpan.dataset.realval = newVal;
+    newSpan.onclick = () => startEditNote(newSpan, url);
+    input.replaceWith(newSpan);
+  }
+
+  input.addEventListener('blur', commit);
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
+    if (e.key === 'Escape') { input.value = currentVal; input.blur(); }
+  });
+}
+
+// -----------------------------------------------------------------------
+// Client-side filtering
+// -----------------------------------------------------------------------
+function applyFilters() {
+  const q         = document.getElementById('search-input').value.toLowerCase().trim();
+  const source    = document.getElementById('source-filter').value.toLowerCase();
+  const state     = document.getElementById('state-filter').value.toLowerCase();
+  const applied   = document.getElementById('applied-filter').value.toLowerCase();
+  const minScore  = parseInt(document.getElementById('score-input').value) || 0;
+
+  const rows = document.querySelectorAll('#jobs-table tbody tr.job-row');
+  let visible = 0;
+
+  rows.forEach(row => {
+    const title   = row.dataset.title   || '';
+    const company = row.dataset.company || '';
+    const src     = row.dataset.source  || '';
+    const st      = row.dataset.state   || '';
+    const app     = row.dataset.applied || '';
+    const score   = parseInt(row.dataset.score) || 0;
+
+    let show = true;
+
+    if (q && !title.includes(q) && !company.includes(q)) show = false;
+    if (source !== 'all' && src !== source) show = false;
+    if (state  !== 'all' && st  !== state)  show = false;
+    if (applied !== 'all' && app !== applied) show = false;
+    if (score < minScore) show = false;
+
+    row.classList.toggle('hidden-row', !show);
+    if (show) visible++;
+  });
+
+  document.getElementById('visible-count').textContent = visible;
+}
+
+// -----------------------------------------------------------------------
+// Sort
+// -----------------------------------------------------------------------
+let sortCol = null;
+let sortDir = 1;
+
+document.querySelectorAll('thead th').forEach(th => {
+  th.addEventListener('click', () => {
+    const col = th.dataset.col;
+    if (sortCol === col) {
+      sortDir = -sortDir;
+    } else {
+      sortCol = col;
+      sortDir = 1;
+    }
+    document.querySelectorAll('thead th').forEach(h => h.classList.remove('sorted-asc', 'sorted-desc'));
+    th.classList.add(sortDir === 1 ? 'sorted-asc' : 'sorted-desc');
+    sortTable(col, sortDir);
+  });
+});
+
+function getCellVal(row, col) {
+  const cells = row.querySelectorAll('td');
+  const map = { title:0, company:1, days:2, state:3, score:4, source:5, location:6, applied:7, priority:8, status:9, notes:10, link:11 };
+  const idx = map[col];
+  if (idx === undefined) return '';
+  if (col === 'score') return parseInt(row.dataset.score) || 0;
+  if (col === 'days')  return parseInt(cells[idx].textContent) || 9999;
+  if (col === 'applied') return row.dataset.applied;
+  return cells[idx].textContent.trim().toLowerCase();
+}
+
+function sortTable(col, dir) {
+  const tbody = document.querySelector('#jobs-table tbody');
+  const rows = Array.from(tbody.querySelectorAll('tr.job-row'));
+  rows.sort((a, b) => {
+    const va = getCellVal(a, col);
+    const vb = getCellVal(b, col);
+    if (typeof va === 'number' && typeof vb === 'number') return (va - vb) * dir;
+    return String(va).localeCompare(String(vb)) * dir;
+  });
+  rows.forEach(r => tbody.appendChild(r));
+}
+
+// -----------------------------------------------------------------------
+// Reset filters
+// -----------------------------------------------------------------------
+function resetFilters() {
+  document.getElementById('search-input').value  = '';
+  document.getElementById('source-filter').value = 'all';
+  document.getElementById('state-filter').value  = 'all';
+  document.getElementById('applied-filter').value= 'all';
+  document.getElementById('score-input').value   = '';
+  applyFilters();
+}
+
+// -----------------------------------------------------------------------
+// Wire up filter listeners
+// -----------------------------------------------------------------------
+document.getElementById('search-input').addEventListener('input',  applyFilters);
+document.getElementById('source-filter').addEventListener('change', applyFilters);
+document.getElementById('state-filter').addEventListener('change',  applyFilters);
+document.getElementById('applied-filter').addEventListener('change',applyFilters);
+document.getElementById('score-input').addEventListener('input',    applyFilters);
+
+// Initial filter pass (in case server returned pre-filtered results, keep count accurate)
+applyFilters();
+</script>
+</body>
+</html>

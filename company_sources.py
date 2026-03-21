@@ -226,7 +226,7 @@ WORKDAY_SOURCES = [
     },
     {
         "company_name": "Leidos",
-        "url": "https://leidos.wd5.myworkdayjobs.com/wday/cxs/leidos/Leidos/jobs"
+        "url": "https://leidos.wd5.myworkdayjobs.com/wday/cxs/leidos/External/jobs"
     },
     {
         "company_name": "SAIC",
@@ -238,7 +238,7 @@ WORKDAY_SOURCES = [
     },
     {
         "company_name": "MITRE Corporation",
-        "url": "https://mitre.wd5.myworkdayjobs.com/wday/cxs/mitre/MITRE_Careers/jobs"
+        "url": "https://mitre.wd5.myworkdayjobs.com/wday/cxs/mitre/External/jobs"
     },
     {
         "company_name": "ManTech International",
@@ -281,14 +281,6 @@ WORKDAY_SOURCES = [
         "url": "https://sncorp.wd5.myworkdayjobs.com/wday/cxs/sncorp/External/jobs"
     },
     {
-        "company_name": "Parsons Corporation",
-        "url": "https://parsons.wd5.myworkdayjobs.com/wday/cxs/parsons/External/jobs"
-    },
-    {
-        "company_name": "Vectrus",
-        "url": "https://vectrus.wd5.myworkdayjobs.com/wday/cxs/vectrus/External/jobs"
-    },
-    {
         "company_name": "Elbit Systems of America",
         "url": "https://elbitsystemsofamerica.wd5.myworkdayjobs.com/wday/cxs/elbitsystemsofamerica/External/jobs"
     },
@@ -316,39 +308,39 @@ WORKDAY_SOURCES = [
     },
     {
         "company_name": "Citigroup",
-        "url": "https://citi.wd5.myworkdayjobs.com/wday/cxs/citi/USA_Jobs/jobs"
+        "url": "https://citi.wd5.myworkdayjobs.com/wday/cxs/citi/External/jobs"
     },
     {
         "company_name": "American Express",
-        "url": "https://aexp.wd5.myworkdayjobs.com/wday/cxs/aexp/jobs"
+        "url": "https://aexp.wd5.myworkdayjobs.com/wday/cxs/aexp/External/jobs"
     },
     {
         "company_name": "Visa",
-        "url": "https://visa.wd5.myworkdayjobs.com/wday/cxs/visa/Visa-External/jobs"
+        "url": "https://visa.wd5.myworkdayjobs.com/wday/cxs/visa/External/jobs"
     },
     {
         "company_name": "Mastercard",
-        "url": "https://mastercard.wd5.myworkdayjobs.com/wday/cxs/mastercard/careersection/jobs"
+        "url": "https://mastercard.wd5.myworkdayjobs.com/wday/cxs/mastercard/External/jobs"
     },
     {
         "company_name": "PNC Financial",
-        "url": "https://pnc.wd5.myworkdayjobs.com/wday/cxs/pnc/PNCCareers/jobs"
+        "url": "https://pnc.wd5.myworkdayjobs.com/wday/cxs/pnc/External/jobs"
     },
     {
         "company_name": "US Bancorp",
-        "url": "https://usbank.wd5.myworkdayjobs.com/wday/cxs/usbank/US_Bancorp/jobs"
+        "url": "https://usbank.wd5.myworkdayjobs.com/wday/cxs/usbank/External/jobs"
     },
     {
         "company_name": "TD Bank",
-        "url": "https://td.wd3.myworkdayjobs.com/wday/cxs/td/External/jobs"
+        "url": "https://td.wd3.myworkdayjobs.com/wday/cxs/td/TDBank_External/jobs"
     },
     {
         "company_name": "Ally Financial",
-        "url": "https://ally.wd5.myworkdayjobs.com/wday/cxs/ally/Ally_Careers/jobs"
+        "url": "https://ally.wd5.myworkdayjobs.com/wday/cxs/ally/External/jobs"
     },
     {
         "company_name": "Discover Financial",
-        "url": "https://discover.wd5.myworkdayjobs.com/wday/cxs/discover/Discover_External/jobs"
+        "url": "https://discover.wd5.myworkdayjobs.com/wday/cxs/discover/External/jobs"
     },
     {
         "company_name": "Synchrony Financial",
@@ -360,7 +352,7 @@ WORKDAY_SOURCES = [
     },
     {
         "company_name": "Regions Financial",
-        "url": "https://regions.wd5.myworkdayjobs.com/wday/cxs/regions/External/jobs"
+        "url": "https://regions.wd5.myworkdayjobs.com/wday/cxs/regions/Regions/jobs"
     },
     {
         "company_name": "Citizens Financial",
@@ -396,7 +388,7 @@ WORKDAY_SOURCES = [
     },
     {
         "company_name": "Vanguard",
-        "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/External/jobs"
+        "url": "https://vanguard.wd5.myworkdayjobs.com/wday/cxs/vanguard/vanguardcareers/jobs"
     },
 
     # ── MedTech / Healthcare ──────────────────────────────────────────────────
@@ -430,7 +422,7 @@ WORKDAY_SOURCES = [
     },
     {
         "company_name": "Edwards Lifesciences",
-        "url": "https://edwards.wd5.myworkdayjobs.com/wday/cxs/edwards/External/jobs"
+        "url": "https://edwards.wd5.myworkdayjobs.com/wday/cxs/edwards/Edwards/jobs"
     },
     {
         "company_name": "Zimmer Biomet",
@@ -438,7 +430,7 @@ WORKDAY_SOURCES = [
     },
     {
         "company_name": "Haemonetics",
-        "url": "https://haemonetics.wd5.myworkdayjobs.com/wday/cxs/haemonetics/External/jobs"
+        "url": "https://haemonetics.wd5.myworkdayjobs.com/wday/cxs/haemonetics/HaemoneticsCareers/jobs"
     },
     {
         "company_name": "Integra LifeSciences",
@@ -496,15 +488,15 @@ WORKDAY_SOURCES = [
     },
     {
         "company_name": "Target",
-        "url": "https://target.wd5.myworkdayjobs.com/wday/cxs/target/External/jobs"
+        "url": "https://target.wd5.myworkdayjobs.com/wday/cxs/target/TargetCareers/jobs"
     },
     {
         "company_name": "Walmart",
-        "url": "https://walmart.wd5.myworkdayjobs.com/wday/cxs/walmart/External/jobs"
+        "url": "https://walmart.wd5.myworkdayjobs.com/wday/cxs/walmart/WalmartExternal/jobs"
     },
     {
         "company_name": "Home Depot",
-        "url": "https://homedepot.wd5.myworkdayjobs.com/wday/cxs/homedepot/External/jobs"
+        "url": "https://homedepot.wd5.myworkdayjobs.com/wday/cxs/homedepot/CorporateCareers/jobs"
     },
     {
         "company_name": "CVS Health",
@@ -520,7 +512,7 @@ WORKDAY_SOURCES = [
     },
     {
         "company_name": "Allstate",
-        "url": "https://allstate.wd5.myworkdayjobs.com/wday/cxs/allstate/External/jobs"
+        "url": "https://allstate.wd5.myworkdayjobs.com/wday/cxs/allstate/Allstate/jobs"
     },
     {
         "company_name": "John Deere",
@@ -532,7 +524,7 @@ WORKDAY_SOURCES = [
     },
     {
         "company_name": "Emerson Electric",
-        "url": "https://emerson.wd5.myworkdayjobs.com/wday/cxs/emerson/External/jobs"
+        "url": "https://emerson.wd5.myworkdayjobs.com/wday/cxs/emerson/EmersonCareers/jobs"
     },
     {
         "company_name": "Rockwell Automation",
@@ -548,7 +540,7 @@ WORKDAY_SOURCES = [
     },
     {
         "company_name": "Carrier Global",
-        "url": "https://carrier.wd5.myworkdayjobs.com/wday/cxs/carrier/External/jobs"
+        "url": "https://carrier.wd5.myworkdayjobs.com/wday/cxs/carrier/carrier_careers/jobs"
     },
     {
         "company_name": "Hubbell",
@@ -574,7 +566,7 @@ WORKDAY_SOURCES = [
     # ── Software / Enterprise Tech ────────────────────────────────────────────
     {
         "company_name": "Salesforce",
-        "url": "https://salesforce.wd12.myworkdayjobs.com/wday/cxs/salesforce/External/jobs"
+        "url": "https://salesforce.wd12.myworkdayjobs.com/wday/cxs/salesforce/Salesforce/jobs"
     },
     {
         "company_name": "ServiceNow",
@@ -582,7 +574,7 @@ WORKDAY_SOURCES = [
     },
     {
         "company_name": "Adobe",
-        "url": "https://adobe.wd5.myworkdayjobs.com/wday/cxs/adobe/External/jobs"
+        "url": "https://adobe.wd5.myworkdayjobs.com/wday/cxs/adobe/AdobeCareers/jobs"
     },
     {
         "company_name": "Intuit",
@@ -598,7 +590,7 @@ WORKDAY_SOURCES = [
     },
     {
         "company_name": "Motorola Solutions",
-        "url": "https://motorolasolutions.wd5.myworkdayjobs.com/wday/cxs/motorolasolutions/External/jobs"
+        "url": "https://motorolasolutions.wd5.myworkdayjobs.com/wday/cxs/motorolasolutions/Careers/jobs"
     },
     {
         "company_name": "Trimble",
@@ -612,6 +604,41 @@ WORKDAY_SOURCES = [
         "company_name": "Zebra Technologies",
         "url": "https://zebra.wd5.myworkdayjobs.com/wday/cxs/zebra/External/jobs"
     },
+]
+
+
+# ----------------------------
+# LEVER BOARDS  (verified working slugs only)
+# ----------------------------
+LEVER_BOARDS = [
+    # ── Defense / Autonomy ────────────────────────────────────────────
+    {"company_name": "Shield AI",              "board_token": "shieldai"},
+    {"company_name": "Zoox",                   "board_token": "zoox"},
+    {"company_name": "Palantir",               "board_token": "palantir"},
+    # ── Biotech ───────────────────────────────────────────────────────
+    {"company_name": "Synthego",               "board_token": "synthego"},
+]
+
+
+# ----------------------------
+# ASHBY BOARDS  (verified working slugs only)
+# ----------------------------
+ASHBY_BOARDS = [
+    # ── AI / Chips ──────────────────────────────────────────────────────────
+    {"company_name": "d-Matrix",               "board_token": "d-matrix"},
+    {"company_name": "Etched",                 "board_token": "etched"},
+    {"company_name": "Cohere",                 "board_token": "cohere"},
+    {"company_name": "ElevenLabs",             "board_token": "elevenlabs"},
+    # ── Autonomy / Robotics ─────────────────────────────────────────────
+    {"company_name": "Physical Intelligence",  "board_token": "physicalintelligence"},
+    # ── Software / AI ────────────────────────────────────────────────────
+    {"company_name": "Linear",                 "board_token": "linear"},
+    {"company_name": "Mercury",                "board_token": "mercury"},
+    {"company_name": "Harvey AI",              "board_token": "harvey"},
+    {"company_name": "Poolside",               "board_token": "poolside"},
+    {"company_name": "Character AI",           "board_token": "character"},
+    {"company_name": "Ramp",                   "board_token": "ramp"},
+    {"company_name": "Notion",                 "board_token": "notion"},
 ]
 
 
